@@ -7,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Prometheus;
 using Coflnet.Core;
-using Coflnet.Core.Security;
 using Microsoft.AspNetCore.Http;
 using Coflnet.Sky.Core.Services;
 
@@ -58,9 +57,6 @@ namespace Coflnet.Sky.Crafts
             services.AddHostedService<NpcSellRefresher>();
 
             services.AddCoflnetCore();
-            if (Configuration.GetSection("HTTPS:TLS").Exists())
-                services.AddKeyedSingleton<PemTlsOptions>("HTTPS", (_, _) =>
-                    PemTlsOptions.FromConfiguration(Configuration.GetSection("HTTPS:TLS"), serverCertificate: true));
             services.AddResponseCaching();
             services.AddMemoryCache();
         }
