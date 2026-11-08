@@ -16,23 +16,11 @@ package `Coflnet.Sky.Crafts.Client`.
 
 
 
-## Optional internal HTTPS
+## HTTP only
 
-HTTP stays on 8000. Setting HTTPS:TLS:CA_CERT_PATH, CERT_PATH and KEY_PATH
-adds native HTTPS on 8443 through Coflnet.Core 0.7.5; new handshakes reload
-renewed PEM files. HTTPS:TLS:REQUIRE_CLIENT_CERTIFICATE defaults to false.
-Trusted clients and anonymous callers are accepted in that mode; an offered
-untrusted certificate is rejected. Set true only after a separate enforcement
-review. Keep CA/name validation enabled on every caller.
+The service serves plain HTTP on 8000 (`ASPNETCORE_URLS` in the Dockerfile) and no HTTPS.
 
 /health/ready reports HTTP-listener health only. It does not mean recipe/profit
 caches are warm. Keep the Service readiness probe on /crafts/ready and its
-existing warmup semantics. Verify each candidate's direct Pod/forwarded HTTPS
-connection within the user's 60-second connection gate while it is NotReady;
-then wait for business readiness and a recipe/profit canary before continuing.
+existing warmup semantics.
 No new upstream request or database/broker readiness check runs at startup.
-
-After server verification, migrate actual Crafts callers individually. Crafts'
-outbound generated API/Items/Bazaar/PlayerState clients and separate HttpClients
-need their own verified HTTPS configuration when those servers are ready; the
-optional BazaarFlipper copper fallback and public Hypixel HTTPS remain unchanged.
